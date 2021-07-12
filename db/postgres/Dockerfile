@@ -1,0 +1,4 @@
+FROM postgres:13-alpine
+ENV POSTGRES_USER maroto
+ENV POSTGRES_PASSWORD senha_super_hiper_ultra_secreta_do_banco_do_m4r0t0
+ENV POSTGRES_DB hub-maroto

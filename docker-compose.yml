@@ -1,0 +1,15 @@
+version: '2'
+
+services:
+  db:
+    build: db/postgres/.
+    ports:
+      - "5433:5432"
+    networks:
+      - hub-maroto-network
+    volumes:
+      - ./docker-persistence:/var/lib/postgresql/data
+
+networks:
+  hub-maroto-network:
+    driver: bridge
