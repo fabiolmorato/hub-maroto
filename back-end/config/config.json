@@ -1,0 +1,26 @@
+{
+  "development": {
+    "username": "maroto",
+    "password": "senha_super_hiper_ultra_secreta_do_banco_do_m4r0t0",
+    "database": "hub-maroto",
+    "host": "localhost",
+    "dialect": "postgres",
+    "port": 5433
+  },
+  "test": {
+    "username": "maroto",
+    "password": "senha_super_hiper_ultra_secreta_do_banco_do_m4r0t0",
+    "database": "hub-maroto",
+    "host": "localhost",
+    "dialect": "postgres",
+    "port": 5433
+  },
+  "production": {
+    "username": "maroto",
+    "password": "senha_super_hiper_ultra_secreta_do_banco_do_m4r0t0",
+    "database": "hub-maroto",
+    "host": "localhost",
+    "dialect": "postgres",
+    "port": 5433
+  }
+}
