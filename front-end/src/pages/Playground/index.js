@@ -191,8 +191,8 @@ const commands = {
         application.instructionBlockSize = 1000;
         application.instructionBlockSleep = 1;
       } else if (value === 'faster') {
-        application.instructionBlockSize = 1000;
-        application.instructionBlockSleep = 1;
+        application.instructionBlockSize = 10000;
+        application.instructionBlockSleep = 0;
       } else {
         application.write(`Valor desconhecido para parâmetro SPEED. Ignorando.`);
       }
