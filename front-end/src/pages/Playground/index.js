@@ -72,7 +72,7 @@ const application = {
           if (commands[command]) {
             commands[command]();
           } else {
-            this.write(`"${command}" is not a recognized command! Type help for help.`);
+            this.write(`"${command}" não é um comando reconhecido! Digite help para obter ajuda.`);
           }
         }
 
