@@ -53,6 +53,7 @@ const application = {
 
   setTerm (term) {
     this.term = term;
+    commands.help();
   },
 
   start () {
@@ -147,7 +148,7 @@ const application = {
 
 const commands = {
   help () {
-    application.write(`run: executa o programa digitado acima\n\npor enquanto só funciona com javascript ES5`);
+    application.write(`MANUAL\n======\n\nrun: executa o programa digitado acima\n\npor enquanto só funciona com javascript ES5\n`);
   },
 
   run () {
