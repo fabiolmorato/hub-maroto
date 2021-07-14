@@ -47,7 +47,7 @@ const application = {
   running: false,
   localEcho: null,
   term: null,
-  program: "",
+  program: defaultProgram,
 
   setLocalEcho (localEcho) {
     this.localEcho = localEcho;
