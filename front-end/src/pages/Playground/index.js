@@ -8,6 +8,8 @@ import Interpreter from "../../assets/libs/acorn";
 const defaultProgram = `// escreva seu código aqui :)
 // para ler do usuário, utilize a função input
 // para imprimir, utilize a função print, não console.log
+var userInput = input("Digite alguma coisa: ");
+print('Você digitou: ' + userInput);
 `;
 
 export default function Playground () {
