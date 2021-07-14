@@ -147,7 +147,7 @@ const application = {
 
 const commands = {
   help () {
-    application.write(`run: executa o programa digitado acima`);
+    application.write(`run: executa o programa digitado acima\n\npor enquanto só funciona com javascript ES5`);
   },
 
   run () {
