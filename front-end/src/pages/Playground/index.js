@@ -48,6 +48,8 @@ const application = {
   localEcho: null,
   term: null,
   program: defaultProgram,
+  instructionBlockSize: 10000,
+  instructionBlockSleep: 0,
 
   setLocalEcho (localEcho) {
     this.localEcho = localEcho;
@@ -73,7 +75,7 @@ const application = {
 
         if (command) {
           if (commands[command]) {
-            commands[command]();
+            commands[command](...parts.slice(1));
           } else {
             this.write(`"${command}" não é um comando reconhecido! Digite help para obter ajuda.`);
           }
@@ -138,14 +140,18 @@ const application = {
 
     async function nextStep () {
       for (;;steps++) {
-        if (steps >= 10000) {
+        if (steps >= self.instructionBlockSize) {
           steps = 0;
-          await sleep(0);
+          await sleep(self.instructionBlockSleep);
         }
         if (!interpreter.step()) {
           break;
         }
       }
+
+      self.running = false;
+      self.write('\n');
+      self.readCommand();
     }
 
     setTimeout(() => nextStep(), 0);
@@ -164,5 +170,32 @@ const commands = {
 
   run () {
     application.runProgram();
+  },
+
+  set (setting) {
+    const parts = setting.split('=');
+    const name = parts[0];
+    const value = parts[1];
+
+    if (name === 'SPEED') {
+      if (value === 'slower') {
+        application.instructionBlockSize = 5;
+        application.instructionBlockSleep = 100;
+      } else if (value === 'slow') {
+        application.instructionBlockSize = 50;
+        application.instructionBlockSleep = 10;
+      } else if (value === 'medium') {
+        application.instructionBlockSize = 500;
+        application.instructionBlockSleep = 1;
+      } else if (value === 'fast') {
+        application.instructionBlockSize = 1000;
+        application.instructionBlockSleep = 1;
+      } else if (value === 'faster') {
+        application.instructionBlockSize = 1000;
+        application.instructionBlockSleep = 1;
+      } else {
+        application.write(`Valor desconhecido para parâmetro SPEED. Ignorando.`);
+      }
+    }
   }
 };
