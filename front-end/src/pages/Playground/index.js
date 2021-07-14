@@ -51,11 +51,11 @@ const application = {
 
   setLocalEcho (localEcho) {
     this.localEcho = localEcho;
+    commands.help();
   },
 
   setTerm (term) {
     this.term = term;
-    commands.help();
   },
 
   start () {
@@ -120,20 +120,31 @@ const application = {
         self.write(args.join('\n'));
       }
 
+      function clear () {
+        self.term.clear();
+      }
+
       interpreter.setProperty(globalObject, 'print', interpreter.createNativeFunction(log));
       
       interpreter.setProperty(globalObject, 'input',
           interpreter.createAsyncFunction(input));
+
+      interpreter.setProperty(globalObject, 'clearScreen', interpreter.createNativeFunction(clear));
     };
 
     const interpreter = new Interpreter(self.program, initFunc);
+    const sleep = timeout => new Promise(resolve => setTimeout(resolve, timeout));
+    let steps = 0;
 
-    function nextStep () {
-      if (interpreter.step()) {
-        setTimeout(nextStep, 0);
-      } else {
-        self.running = false;
-        setTimeout(() => self.start(), 0);
+    async function nextStep () {
+      for (;;steps++) {
+        if (steps >= 10000) {
+          steps = 0;
+          await sleep(0);
+        }
+        if (!interpreter.step()) {
+          break;
+        }
       }
     }
 
@@ -141,11 +152,9 @@ const application = {
   },
 
   write (string) {
-    const lines = string.split('\n');
-    for (const line of lines) {
-      this.term.writeln(line);
-    }
-  }
+    string = string.replaceAll('\n', '\r\n');
+    this.term.write(string);
+  },
 };
 
 const commands = {
@@ -155,6 +164,5 @@ const commands = {
 
   run () {
     application.runProgram();
-    // application.write(`${application.program}`);
   }
 };
