@@ -31,7 +31,7 @@ export default function Login () {
   }
   
   function forgotPassword () {
-    alert("Chuchu, infelizmente não tive tempo de fazer essa parte ainda não. Mas só me pedir pra trocar <3");
+    alert("Por enquanto isso aqui não funciona não");
   }
 
   return (

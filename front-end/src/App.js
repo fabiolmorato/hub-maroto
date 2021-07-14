@@ -10,6 +10,7 @@ import UserContext, { UserProvider } from "./contexts/UserContext";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import Playground from "./pages/Playground";
 
 import "./assets/styles/reset.css";
 import "./assets/styles/style.css";
@@ -21,6 +22,10 @@ export default function App() {
         <Switch>
           <ProtectedRoute path="/" exact>
             <Home />
+          </ProtectedRoute>
+
+          <ProtectedRoute path="/playground" exact>
+            <Playground />
           </ProtectedRoute>
 
           <UnprotectedRoute path="/login" exact>
