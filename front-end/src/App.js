@@ -24,9 +24,9 @@ export default function App() {
             <Home />
           </ProtectedRoute>
 
-          <ProtectedRoute path="/playground" exact>
+          <Route path="/playground" exact>
             <Playground />
-          </ProtectedRoute>
+          </Route>
 
           <UnprotectedRoute path="/login" exact>
             <Login />
