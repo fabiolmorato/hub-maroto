@@ -30,7 +30,7 @@ export default function Playground () {
         defaultValue={defaultProgram}
         theme="vs-dark"
         onChange={code => {
-          console.log('program changed', code);
+          // console.log('program changed', code);
           application.setProgram.apply(application, [code]);
         }}
       />
@@ -46,6 +46,7 @@ const application = {
   program: defaultProgram,
   instructionBlockSize: 10000,
   instructionBlockSleep: 0,
+  echoReturn: true,
 
   setLocalEcho (localEcho) {
     this.localEcho = localEcho;
@@ -152,6 +153,7 @@ const application = {
 
       self.running = false;
       self.write('\n');
+      self.write(`-> ${interpreter.value}\n`);
       self.readCommand();
     }
 
@@ -197,6 +199,8 @@ const commands = {
       } else {
         application.write(`Valor desconhecido para parâmetro SPEED. Ignorando.\n`);
       }
+    } else if (name === 'ECHO_RETURN') {
+      application.echoReturn = value === 'true'; 
     } else {
       application.write(`Configuração inválida.\n`);
     }
