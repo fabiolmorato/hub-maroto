@@ -116,7 +116,7 @@ const application = {
 
       function log (...args) {
         console.log(...args);
-        self.write(args.join('\n'));
+        self.write(args.join('\n') + '\n');
       }
 
       function clear () {
