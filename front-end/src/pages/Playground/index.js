@@ -6,10 +6,6 @@ import LocalEchoController from "local-echo";
 import Interpreter from "../../assets/libs/acorn";
 
 const defaultProgram = `// escreva seu código aqui :)
-// para ler do usuário, utilize a função input
-// para imprimir, utilize a função print, não console.log
-var userInput = input("Digite alguma coisa: ");
-print('Você digitou: ' + userInput);
 `;
 
 export default function Playground () {
@@ -126,7 +122,12 @@ const application = {
         self.term.clear();
       }
 
-      interpreter.setProperty(globalObject, 'print', interpreter.createNativeFunction(log));
+      const consoleObj = interpreter.nativeToPseudo({});
+      interpreter.setProperty(globalObject, 'console', consoleObj);
+
+      interpreter.setProperty(consoleObj, 'log', interpreter.createNativeFunction(log));
+
+      // interpreter.setProperty(globalObject, 'print', interpreter.createNativeFunction(log));
       
       interpreter.setProperty(globalObject, 'input',
           interpreter.createAsyncFunction(input));
@@ -165,7 +166,7 @@ const application = {
 
 const commands = {
   help () {
-    application.write(`MANUAL\n======\n\nrun: executa o programa digitado acima\n\npor enquanto só funciona com javascript ES5\n`);
+    application.write(`MANUAL\n======\n\nrun: executa o programa digitado acima\nhelp: mostra esse diálogo\nset <CONFIG=value>: configura flag do interpretador\n\n`);
   },
 
   run () {
@@ -194,8 +195,10 @@ const commands = {
         application.instructionBlockSize = 10000;
         application.instructionBlockSleep = 0;
       } else {
-        application.write(`Valor desconhecido para parâmetro SPEED. Ignorando.`);
+        application.write(`Valor desconhecido para parâmetro SPEED. Ignorando.\n`);
       }
+    } else {
+      application.write(`Configuração inválida.\n`);
     }
   }
 };
