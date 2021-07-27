@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import Editor from "@monaco-editor/react";
 import { XTerm } from "xterm-for-react";
 import LocalEchoController from "local-echo";
+import * as Babel from "@babel/standalone";
 
 import Interpreter from "../../assets/libs/acorn";
 
@@ -116,7 +117,7 @@ const application = {
 
       function log (...args) {
         console.log(...args);
-        self.write(args.join('\n') + '\n');
+        self.write(args.join('\n'));
       }
 
       function clear () {
@@ -127,8 +128,6 @@ const application = {
       interpreter.setProperty(globalObject, 'console', consoleObj);
 
       interpreter.setProperty(consoleObj, 'log', interpreter.createNativeFunction(log));
-
-      // interpreter.setProperty(globalObject, 'print', interpreter.createNativeFunction(log));
       
       interpreter.setProperty(globalObject, 'input',
           interpreter.createAsyncFunction(input));
@@ -136,25 +135,36 @@ const application = {
       interpreter.setProperty(globalObject, 'clearScreen', interpreter.createNativeFunction(clear));
     };
 
-    const interpreter = new Interpreter(self.program, initFunc);
+    const transpiled = Babel.transform(self.program, { presets: ["env"] }).code;
+    console.log(transpiled);
+
+    const interpreter = new Interpreter(transpiled, initFunc);
     const sleep = timeout => new Promise(resolve => setTimeout(resolve, timeout));
     let steps = 0;
 
     async function nextStep () {
-      for (;;steps++) {
-        if (steps >= self.instructionBlockSize) {
-          steps = 0;
-          await sleep(self.instructionBlockSleep);
+      try {
+        for (;;steps++) {
+          if (steps >= self.instructionBlockSize) {
+            steps = 0;
+            await sleep(self.instructionBlockSleep);
+          }
+          if (!interpreter.step()) {
+            break;
+          }
         }
-        if (!interpreter.step()) {
-          break;
-        }
+  
+        self.running = false;
+        self.write('\n');
+        self.write(`-> ${interpreter.value}\n`);
+        self.readCommand();
+      } catch (err) {
+        console.error(err);
+        self.term.write(err.message);
+        self.running = false;
+        self.write('\n');
+        self.readCommand();
       }
-
-      self.running = false;
-      self.write('\n');
-      self.write(`-> ${interpreter.value}\n`);
-      self.readCommand();
     }
 
     setTimeout(() => nextStep(), 0);

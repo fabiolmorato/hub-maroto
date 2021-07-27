@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 
-import * as api from "../../services/api/auth";
+import useApi from "../../hooks/useApi";
 
 import UserContext from "../../contexts/UserContext";
 
@@ -13,6 +13,8 @@ import {
 import AuthLayout from "../../layouts/Auth";
 
 export default function Login () {
+  const api = useApi();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -22,7 +24,7 @@ export default function Login () {
   function login (event) {
     event.preventDefault();
 
-    api.login(username, password).then(response => {
+    api.auth.login(username, password).then(response => {
       setUser(response);
       history.push("/");
     }).catch(() => {

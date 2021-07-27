@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/plugin-transform-runtime": "^7.14.5",
+    "@babel/runtime": "^7.14.8",
+    "@babel/standalone": "^7.14.8",
     "@monaco-editor/react": "^4.2.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
