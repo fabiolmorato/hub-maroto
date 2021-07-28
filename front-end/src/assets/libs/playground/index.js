@@ -113,7 +113,7 @@ export default class Playground {
 
       function log (...args) {
         console.log(...args);
-        self.write(args.join(' '));
+        self.write(args.join(' ') + '\n');
       }
 
       function clear () {
