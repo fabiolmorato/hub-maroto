@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import Editor from "@monaco-editor/react";
 import { XTerm } from "xterm-for-react";
+import styled from "styled-components";
 
 import PlaygroundRunner from "../../assets/libs/playground";
 
@@ -36,7 +37,18 @@ export default function Playground () {
         theme="vs-dark"
         onChange={setProgram}
       />
-      <XTerm ref={xtermRef} options={{ cursorBlink: true }} />
+      <TerminalContainer>
+        <XTerm ref={xtermRef} options={{ cursorBlink: true }} />
+      </TerminalContainer>
     </>
   );
 }
+
+const TerminalContainer = styled.div`
+  width: 100%;
+  height: 432px;
+
+  .xterm-screen, canvas {
+    height: 432px !important;
+  }
+`;

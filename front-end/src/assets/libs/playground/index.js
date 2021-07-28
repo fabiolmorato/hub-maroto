@@ -1,10 +1,14 @@
 import * as Babel from "@babel/standalone";
+import { FitAddon } from "xterm-addon-fit";
 
 import Interpreter from "../acorn";
 
 export default class Playground {
   constructor (terminal) {
     this.term = terminal;
+    const fitAddon = new FitAddon();
+    this.term.loadAddon(fitAddon);
+    fitAddon.fit();
 
     this.running = false;
     this.program = defaultProgram;
@@ -14,10 +18,16 @@ export default class Playground {
 
     this.readBuffer = "";
     this.term.onKey(key => {
-      this.term.write(key.key);
-      if (key.key !== '\r') {
+      if (key.key.charCodeAt(0) === 127) {
+        this.readBuffer = this.readBuffer.split("").slice(0, this.readBuffer.length - 1).join("");
+        this.term.write("\x1B[D");
+        this.term.write(" ");
+        this.term.write("\x1B[D");
+      } else if (key.key !== '\r') {
+        this.term.write(key.key);
         this.readBuffer += key.key;
       } else {
+        this.term.write(key.key);
         this.onInputEnd(this.readBuffer);
         this.readBuffer = "";
         this.term.write("\n");
@@ -69,7 +79,7 @@ export default class Playground {
           if (this.commands[command]) {
             this.commands[command].execute.apply(this, parts.slice(1));
           } else {
-            this.write(`"${command}" não é um comando reconhecido! Digite help para obter ajuda.`);
+            this.write(`"${command}" não é um comando reconhecido! Digite help para obter ajuda.\n`);
           }
         }
 
@@ -103,7 +113,7 @@ export default class Playground {
 
       function log (...args) {
         console.log(...args);
-        self.write(args.join(' ') + '\n');
+        self.write(args.join(' '));
       }
 
       function clear () {
