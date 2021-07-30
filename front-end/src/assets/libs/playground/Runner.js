@@ -35,29 +35,33 @@ export default class Runner {
   }
 
   run () {
-    return new Promise(async (resolve) => {
+    return new Promise(async (resolve, reject) => {
       const initFunc = (interpreter, globalObject) => {
         for (const injectable of this.injectables) {
           this._injectableValue(interpreter, injectable, globalObject);
         }
       };
 
-      const transpiled = Babel.transform(this.program, { presets: ["env"] }).code;
-      const interpreter = new Interpreter(transpiled, initFunc);
-
-      let steps = 0;
-
-      for (;;steps++) {
-        if (steps >= 10000) {
-          steps = 0;
-          await sleep(0);
+      try {
+        const transpiled = Babel.transform(this.program, { presets: ["env"] }).code;
+        const interpreter = new Interpreter(transpiled, initFunc);
+  
+        let steps = 0;
+  
+        for (;;steps++) {
+          if (steps >= 10000) {
+            steps = 0;
+            await sleep(0);
+          }
+          if (!interpreter.step()) {
+            break;
+          }
         }
-        if (!interpreter.step()) {
-          break;
-        }
+  
+        resolve(interpreter.value);
+      } catch (err) {
+        reject(err);
       }
-
-      resolve(interpreter.value);
     });
   }
 }
