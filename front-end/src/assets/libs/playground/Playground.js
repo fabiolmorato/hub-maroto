@@ -18,6 +18,13 @@ export default class Playground {
               const string = args.join(" ") + "\r\n";
               this.term.write(string.replaceAll("\n", "\r\n"));
             }
+          },
+          {
+            type: "function",
+            name: "clear",
+            value: () => {
+              this.term.clear();
+            }
           }
         ]
       },
