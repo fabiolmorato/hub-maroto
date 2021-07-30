@@ -1,7 +1,5 @@
 import { FitAddon } from "xterm-addon-fit";
 
-const toUint8Array = string => Uint8Array.from(string.split("").map(c => c.charCodeAt(0)));
-
 export default class TerminalController {
   constructor (terminal) {
     this.term = terminal;
@@ -46,7 +44,7 @@ export default class TerminalController {
   write (string) {
     return new Promise(resolve => {
       string = string.replaceAll('\n', '\r\n');
-      this.term.write(toUint8Array(string));
+      this.term.write(string);
   
       setTimeout(() => {
         this.cursor = {
