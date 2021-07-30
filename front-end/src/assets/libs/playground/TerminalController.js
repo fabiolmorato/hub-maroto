@@ -126,9 +126,6 @@ export default class TerminalController {
       await this._writeNewInput(newBuffer);
       this.readBuffer = newBuffer;
     }
-
-
-    console.log(this.cursor, this.termSize);
   }
 
   _moveCursorUp () {
