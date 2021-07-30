@@ -4,6 +4,7 @@ import { XTerm } from "xterm-for-react";
 import styled from "styled-components";
 
 import PlaygroundRunner from "../../assets/libs/playground/Playground";
+import TerminalController from "../../assets/libs/playground/TerminalController";
 
 export default function Playground () {
   const [program, setProgramState] = useState("");
@@ -20,7 +21,7 @@ export default function Playground () {
 
   useEffect(() => {
     const terminal = xtermRef.current.terminal;
-    const playgroundRunner = new PlaygroundRunner(terminal);
+    const playgroundRunner = new PlaygroundRunner(new TerminalController(terminal));
     playgroundRef.current = playgroundRunner;
 
     playgroundRunner.start();

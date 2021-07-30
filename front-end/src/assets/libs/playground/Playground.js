@@ -1,9 +1,8 @@
-import TerminalController from "./TerminalController";
 import Runner from "./Runner";
 
 export default class Playground {
   constructor (terminal) {
-    this.term = new TerminalController(terminal);
+    this.term = terminal;
     this.program = defaultProgram;
 
     this.injectables = ([
