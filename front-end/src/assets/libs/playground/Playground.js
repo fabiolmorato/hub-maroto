@@ -65,6 +65,7 @@ export default class Playground {
             }
           } catch (err) {
             console.error(err);
+            this.term.write('\x1B[1m\x1B[38;2;255;0;0mError: \x1B[0m' + err.message);
           }
         }
       }
