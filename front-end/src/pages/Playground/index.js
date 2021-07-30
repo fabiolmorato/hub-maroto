@@ -3,7 +3,7 @@ import Editor from "@monaco-editor/react";
 import { XTerm } from "xterm-for-react";
 import styled from "styled-components";
 
-import PlaygroundRunner from "../../assets/libs/playground";
+import PlaygroundRunner from "../../assets/libs/playground/Playground";
 
 export default function Playground () {
   const [program, setProgramState] = useState("");
@@ -23,9 +23,9 @@ export default function Playground () {
     const playgroundRunner = new PlaygroundRunner(terminal);
     playgroundRef.current = playgroundRunner;
 
-    setProgramState(playgroundRunner.program);
-
     playgroundRunner.start();
+
+    setProgram(playgroundRunner.getProgram());
   }, []);
 
   return (

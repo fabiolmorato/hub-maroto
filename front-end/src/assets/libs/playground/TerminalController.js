@@ -9,8 +9,6 @@ export default class TerminalController {
     this.readBuffer = "";
     this.bufferPosition = 0;
     this._onInputEnd = () => void 0;
-    
-    this.commands = {};
 
     this.termSize = {
       cols: 0,
@@ -38,10 +36,8 @@ export default class TerminalController {
     return new Promise(async resolve => {
       await this.write(toPrint);
 
-      setTimeout(() => {
-        this.lastReadPosition.col = this.cursor.col;
-        this.lastReadPosition.row = this.cursor.row;
-      }, 0);
+      this.lastReadPosition.col = this.cursor.col;
+      this.lastReadPosition.row = this.cursor.row;
 
       this.onInputEnd = resolve;
     });
@@ -68,6 +64,10 @@ export default class TerminalController {
     })
   }
 
+  clear () {
+    this.term.clear();
+  }
+
   _initTerminal () {
     const fitAddon = new FitAddon();
     this.term.loadAddon(fitAddon);
@@ -78,11 +78,6 @@ export default class TerminalController {
 
     this.term.onKey((...args) => this._onKeyPress.apply(this, args));
     this.term.onResize((...args) => this._onResize.apply(this, args));
-
-    this.read("\x1B[1m\x1B[38;2;0;255;0muser@playground\x1B[0m\x1B[1m$ \x1B[0m").then(value => {
-      console.log(value);
-      this.read("hello again> ");
-    });
   }
 
   _onResize ({ rows, cols }) {
@@ -120,9 +115,10 @@ export default class TerminalController {
       split.splice(this.bufferPosition - 1, Math.min(this.bufferPosition, 1))
       const newBuffer = split.join("");
       this.bufferPosition--;
+      if (this.bufferPosition < 0) this.bufferPosition = 0;
       await this._writeNewInput(newBuffer);
       this.readBuffer = newBuffer;
-    } else if (/^[^\p{Cc}\p{Cf}\p{Zl}\p{Zp}]*$/.test(key.key) || /^[a-z0-9!"#$%&'()*+,.\/:;<=>?@\[\] ^_`{|}~-]*$/i.test(key.key)) { // printable character
+    } else if (/^[^\p{Cc}\p{Cf}\p{Zl}\p{Zp}]*$/.test(key.key) || /^[a-z0-9! "#$%&'()*+,.\/:;<=>?@\[\] ^_`{|}~-]*$/i.test(key.key)) { // printable character
       const split = this.readBuffer.split("");
       split.splice(this.bufferPosition, 0, key.key);
       const newBuffer = split.join("");
