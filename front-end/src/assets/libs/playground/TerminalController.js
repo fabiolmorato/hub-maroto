@@ -24,6 +24,7 @@ export default class TerminalController {
     };
 
     this.waitingInput = false;
+    this.writing = false;
 
     this._initTerminal();
   }
@@ -42,11 +43,12 @@ export default class TerminalController {
   }
 
   write (string) {
-    return new Promise(resolve => {
+    return new Promise(async resolve => {
+      await this._waitFinishWriting();
+      this.writing = true;
+
       string = string.replaceAll('\n', '\r\n');
-      this.term.write(string);
-  
-      setTimeout(() => {
+      this.term.write(string, () => {
         this.cursor = {
           col: this.term.buffer.active.cursorX,
           row: this.term.buffer.active.cursorY
@@ -58,6 +60,7 @@ export default class TerminalController {
         }
 
         resolve();
+        this.writing = false;
       });
     })
   }
@@ -83,8 +86,21 @@ export default class TerminalController {
     this.termSize.rows = rows;
   }
 
+  _waitFinishWriting () {
+    return new Promise(resolve => {
+      const checkWriting = () => {
+        if (!this.writing) resolve();
+        else setTimeout(() => checkWriting());
+      };
+
+      checkWriting();
+    });
+  }
+
   async _onKeyPress (key) {
     if (!this.waitingInput) return;
+
+    await this._waitFinishWriting();
 
     const charCode = key.key.charCodeAt(0);
 
